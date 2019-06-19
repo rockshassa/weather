@@ -8,13 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		23B994B922BA7EBC005D82E8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994B822BA7EBC005D82E8 /* AppDelegate.m */; };
-		23B994BC22BA7EBC005D82E8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994BB22BA7EBC005D82E8 /* ViewController.m */; };
-		23B994BF22BA7EBC005D82E8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23B994BD22BA7EBC005D82E8 /* Main.storyboard */; };
+		23B994BC22BA7EBC005D82E8 /* NGDaysCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994BB22BA7EBC005D82E8 /* NGDaysCollectionViewController.m */; };
 		23B994C222BA7EBC005D82E8 /* weather.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 23B994C022BA7EBC005D82E8 /* weather.xcdatamodeld */; };
 		23B994C422BA7EBE005D82E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23B994C322BA7EBE005D82E8 /* Assets.xcassets */; };
 		23B994C722BA7EBE005D82E8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23B994C522BA7EBE005D82E8 /* LaunchScreen.storyboard */; };
 		23B994CA22BA7EBE005D82E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994C922BA7EBE005D82E8 /* main.m */; };
 		23B994D422BA7EBE005D82E8 /* weatherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994D322BA7EBE005D82E8 /* weatherTests.m */; };
+		23B994E022BA8209005D82E8 /* NGDaysCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994DF22BA8209005D82E8 /* NGDaysCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,9 +31,8 @@
 		23B994B422BA7EBC005D82E8 /* weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23B994B722BA7EBC005D82E8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		23B994B822BA7EBC005D82E8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		23B994BA22BA7EBC005D82E8 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		23B994BB22BA7EBC005D82E8 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		23B994BE22BA7EBC005D82E8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		23B994BA22BA7EBC005D82E8 /* NGDaysCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NGDaysCollectionViewController.h; sourceTree = "<group>"; };
+		23B994BB22BA7EBC005D82E8 /* NGDaysCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NGDaysCollectionViewController.m; sourceTree = "<group>"; };
 		23B994C122BA7EBC005D82E8 /* weather.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = weather.xcdatamodel; sourceTree = "<group>"; };
 		23B994C322BA7EBE005D82E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		23B994C622BA7EBE005D82E8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -42,6 +41,8 @@
 		23B994CF22BA7EBE005D82E8 /* weatherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = weatherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		23B994D322BA7EBE005D82E8 /* weatherTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = weatherTests.m; sourceTree = "<group>"; };
 		23B994D522BA7EBE005D82E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		23B994DE22BA8209005D82E8 /* NGDaysCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NGDaysCollectionViewCell.h; sourceTree = "<group>"; };
+		23B994DF22BA8209005D82E8 /* NGDaysCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NGDaysCollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,11 +84,10 @@
 		23B994B622BA7EBC005D82E8 /* weather */ = {
 			isa = PBXGroup;
 			children = (
+				23B994E222BA8228005D82E8 /* View Controllers */,
+				23B994E122BA8218005D82E8 /* Views */,
 				23B994B722BA7EBC005D82E8 /* AppDelegate.h */,
 				23B994B822BA7EBC005D82E8 /* AppDelegate.m */,
-				23B994BA22BA7EBC005D82E8 /* ViewController.h */,
-				23B994BB22BA7EBC005D82E8 /* ViewController.m */,
-				23B994BD22BA7EBC005D82E8 /* Main.storyboard */,
 				23B994C322BA7EBE005D82E8 /* Assets.xcassets */,
 				23B994C522BA7EBE005D82E8 /* LaunchScreen.storyboard */,
 				23B994C822BA7EBE005D82E8 /* Info.plist */,
@@ -104,6 +104,24 @@
 				23B994D522BA7EBE005D82E8 /* Info.plist */,
 			);
 			path = weatherTests;
+			sourceTree = "<group>";
+		};
+		23B994E122BA8218005D82E8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				23B994DE22BA8209005D82E8 /* NGDaysCollectionViewCell.h */,
+				23B994DF22BA8209005D82E8 /* NGDaysCollectionViewCell.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		23B994E222BA8228005D82E8 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				23B994BA22BA7EBC005D82E8 /* NGDaysCollectionViewController.h */,
+				23B994BB22BA7EBC005D82E8 /* NGDaysCollectionViewController.m */,
+			);
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -188,7 +206,6 @@
 			files = (
 				23B994C722BA7EBE005D82E8 /* LaunchScreen.storyboard in Resources */,
 				23B994C422BA7EBE005D82E8 /* Assets.xcassets in Resources */,
-				23B994BF22BA7EBC005D82E8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,8 +224,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				23B994C222BA7EBC005D82E8 /* weather.xcdatamodeld in Sources */,
-				23B994BC22BA7EBC005D82E8 /* ViewController.m in Sources */,
+				23B994BC22BA7EBC005D82E8 /* NGDaysCollectionViewController.m in Sources */,
 				23B994CA22BA7EBE005D82E8 /* main.m in Sources */,
+				23B994E022BA8209005D82E8 /* NGDaysCollectionViewCell.m in Sources */,
 				23B994B922BA7EBC005D82E8 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,14 +250,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		23B994BD22BA7EBC005D82E8 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				23B994BE22BA7EBC005D82E8 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		23B994C522BA7EBE005D82E8 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
