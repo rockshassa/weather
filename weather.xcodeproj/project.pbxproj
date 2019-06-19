@@ -9,12 +9,14 @@
 /* Begin PBXBuildFile section */
 		23B994B922BA7EBC005D82E8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994B822BA7EBC005D82E8 /* AppDelegate.m */; };
 		23B994BC22BA7EBC005D82E8 /* NGDaysCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994BB22BA7EBC005D82E8 /* NGDaysCollectionViewController.m */; };
-		23B994C222BA7EBC005D82E8 /* weather.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 23B994C022BA7EBC005D82E8 /* weather.xcdatamodeld */; };
 		23B994C422BA7EBE005D82E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23B994C322BA7EBE005D82E8 /* Assets.xcassets */; };
 		23B994C722BA7EBE005D82E8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23B994C522BA7EBE005D82E8 /* LaunchScreen.storyboard */; };
 		23B994CA22BA7EBE005D82E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994C922BA7EBE005D82E8 /* main.m */; };
 		23B994D422BA7EBE005D82E8 /* weatherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994D322BA7EBE005D82E8 /* weatherTests.m */; };
-		23B994E022BA8209005D82E8 /* NGDaysCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994DF22BA8209005D82E8 /* NGDaysCollectionViewCell.m */; };
+		23B994E822BAA7DE005D82E8 /* NGDailyForecast+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994E622BAA7DE005D82E8 /* NGDailyForecast+CoreDataClass.m */; };
+		23B994E922BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994E722BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.m */; };
+		23B994EF22BAC060005D82E8 /* weather.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 23B994C022BA7EBC005D82E8 /* weather.xcdatamodeld */; };
+		23B994FA22BADA22005D82E8 /* NGDaysCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994F922BADA22005D82E8 /* NGDaysCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,8 +43,12 @@
 		23B994CF22BA7EBE005D82E8 /* weatherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = weatherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		23B994D322BA7EBE005D82E8 /* weatherTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = weatherTests.m; sourceTree = "<group>"; };
 		23B994D522BA7EBE005D82E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		23B994DE22BA8209005D82E8 /* NGDaysCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NGDaysCollectionViewCell.h; sourceTree = "<group>"; };
-		23B994DF22BA8209005D82E8 /* NGDaysCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NGDaysCollectionViewCell.m; sourceTree = "<group>"; };
+		23B994E422BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NGDailyForecast+CoreDataProperties.h"; sourceTree = "<group>"; };
+		23B994E522BAA7DE005D82E8 /* NGDailyForecast+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NGDailyForecast+CoreDataClass.h"; sourceTree = "<group>"; };
+		23B994E622BAA7DE005D82E8 /* NGDailyForecast+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NGDailyForecast+CoreDataClass.m"; sourceTree = "<group>"; };
+		23B994E722BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NGDailyForecast+CoreDataProperties.m"; sourceTree = "<group>"; };
+		23B994F822BADA22005D82E8 /* NGDaysCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NGDaysCollectionViewCell.h; sourceTree = "<group>"; };
+		23B994F922BADA22005D82E8 /* NGDaysCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NGDaysCollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +90,7 @@
 		23B994B622BA7EBC005D82E8 /* weather */ = {
 			isa = PBXGroup;
 			children = (
+				23B994E322BAA7C0005D82E8 /* Model */,
 				23B994E222BA8228005D82E8 /* View Controllers */,
 				23B994E122BA8218005D82E8 /* Views */,
 				23B994B722BA7EBC005D82E8 /* AppDelegate.h */,
@@ -109,8 +116,8 @@
 		23B994E122BA8218005D82E8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				23B994DE22BA8209005D82E8 /* NGDaysCollectionViewCell.h */,
-				23B994DF22BA8209005D82E8 /* NGDaysCollectionViewCell.m */,
+				23B994F822BADA22005D82E8 /* NGDaysCollectionViewCell.h */,
+				23B994F922BADA22005D82E8 /* NGDaysCollectionViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -122,6 +129,17 @@
 				23B994BB22BA7EBC005D82E8 /* NGDaysCollectionViewController.m */,
 			);
 			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		23B994E322BAA7C0005D82E8 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				23B994E522BAA7DE005D82E8 /* NGDailyForecast+CoreDataClass.h */,
+				23B994E622BAA7DE005D82E8 /* NGDailyForecast+CoreDataClass.m */,
+				23B994E422BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.h */,
+				23B994E722BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.m */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -223,11 +241,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23B994C222BA7EBC005D82E8 /* weather.xcdatamodeld in Sources */,
+				23B994E922BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.m in Sources */,
 				23B994BC22BA7EBC005D82E8 /* NGDaysCollectionViewController.m in Sources */,
 				23B994CA22BA7EBE005D82E8 /* main.m in Sources */,
-				23B994E022BA8209005D82E8 /* NGDaysCollectionViewCell.m in Sources */,
 				23B994B922BA7EBC005D82E8 /* AppDelegate.m in Sources */,
+				23B994EF22BAC060005D82E8 /* weather.xcdatamodeld in Sources */,
+				23B994E822BAA7DE005D82E8 /* NGDailyForecast+CoreDataClass.m in Sources */,
+				23B994FA22BADA22005D82E8 /* NGDaysCollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+@class NSPersistentContainer;
 
 @interface NGDaysCollectionViewController : UICollectionViewController
+
+-(instancetype)initWithPersistentContainer:(NSPersistentContainer*)container;
 
 +(UICollectionViewFlowLayout*)defaultLayout;
 

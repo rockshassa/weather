@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+@class NGDailyForecast;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NGDaysCollectionViewCell : UICollectionViewCell
+
+-(void)setDailyForecast:(NGDailyForecast*)forecast;
 
 @end
 

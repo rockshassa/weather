@@ -18,7 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    NGDaysCollectionViewController *days = [[NGDaysCollectionViewController alloc] initWithCollectionViewLayout:[NGDaysCollectionViewController defaultLayout]];
+    NGDaysCollectionViewController *days = [[NGDaysCollectionViewController alloc] initWithPersistentContainer:self.persistentContainer];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:days];
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.rootViewController = nav;
