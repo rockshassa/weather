@@ -23,6 +23,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         
+        self.contentView.backgroundColor = [UIColor whiteColor]; //todo: support dark mode
+        
         _titleLabel = [UILabel new];
         _titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _titleLabel.backgroundColor = [UIColor whiteColor];
@@ -44,21 +46,26 @@
         [_titleLabel.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.iconView.trailingAnchor multiplier:1].active = YES;
         [_titleLabel.topAnchor constraintEqualToSystemSpacingBelowAnchor:self.contentView.topAnchor multiplier:1].active = YES;
         
-        NSLayoutConstraint *labelTrailing = [_titleLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor];
-        labelTrailing.priority = UILayoutPriorityDefaultLow;
-//        labelTrailing.active = YES;
         
     }
     return self;
+}
+
+-(void)layoutSubviews{
+    [super layoutSubviews];
+    self.contentView.layer.cornerRadius = 15;
+    self.contentView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.contentView.layer.borderWidth = 2;
 }
 
 -(void)setDailyForecast:(NGDailyForecast*)forecast{
     
     //TODO: use attributed string
     self.titleLabel.text = [NSString stringWithFormat:@"%@\n%@",forecast.weekday, forecast.summary];
-    UIImage *img = [UIImage imageNamed:@"clear-day"];
-    _iconView.image = img;
-//    self.titleLabel.text = @"FRidayy";
+    
+    //TODO: very tight coupling between the API and the asset catalog names, not ideal
+    _iconView.image = [UIImage imageNamed:forecast.iconName];
+    
 }
 
 -(void)prepareForReuse{

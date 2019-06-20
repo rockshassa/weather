@@ -15,6 +15,8 @@
 
 @interface NGDaysCollectionViewController () <CLLocationManagerDelegate, NSFetchedResultsControllerDelegate, UICollectionViewDelegateFlowLayout>
 
+@property (nonatomic) UIActivityIndicatorView *spinner;
+
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) CLLocation *currentLocation;
 @property (nonatomic) BOOL fetchingForecast;
@@ -46,10 +48,19 @@ static NSString * const cellReuseIdentifier = @"com.weather.NGDaysCollectionView
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.title = @"Weather near me";
-    self.view.backgroundColor = [UIColor cyanColor];
+    self.collectionView.backgroundColor = [UIColor grayColor];
     
     [self.collectionView registerClass:[NGDaysCollectionViewCell class] forCellWithReuseIdentifier:cellReuseIdentifier];
+    
+    _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    _spinner.translatesAutoresizingMaskIntoConstraints = NO;
+    _spinner.hidden = YES;
+    [self.view addSubview:_spinner];
+    
+    [_spinner.centerXAnchor constraintEqualToAnchor:self.collectionView.centerXAnchor].active = YES;
+    [_spinner.centerYAnchor constraintEqualToAnchor:self.collectionView.centerYAnchor].active = YES;
     
     _writeContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     _writeContext.parentContext = self.container.viewContext;
@@ -123,6 +134,7 @@ static NSString * const cellReuseIdentifier = @"com.weather.NGDaysCollectionView
             break;
         case kCLAuthorizationStatusAuthorizedWhenInUse:
             [_locationManager requestLocation];
+            [_spinner startAnimating];
             break;
         default:
             break;
@@ -138,6 +150,7 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
         return;
     }
     _fetchingForecast = YES;
+    [_spinner startAnimating];
     
     NSString *format = [[NSString alloc] initWithFormat:@"https://api.darksky.net/forecast/%@/%f,%f?exclude=currently,minutely,hourly,alerts,flags", apiKey, location.coordinate.latitude, location.coordinate.longitude];
     
@@ -152,20 +165,26 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
                                      
                                      //TODO: care about the HTTP status code
                                      
+                                     NSString *errorMsg;
+                                     
                                      if (error ||
                                          dict == [NSNull null] ||
                                          ![dict isKindOfClass:[NSDictionary class]]){
-                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                            [weakSelf displayErrorWithReason:@"A network error occurred"];
-                                         });
+                                         errorMsg = @"A network error occurred";
                                      } else if (parseError) {
-                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                             [weakSelf displayErrorWithReason:@"A parsing error occurred"];
-                                         });
+                                         errorMsg = @"A parsing error occurred";
                                      } else {
                                          [weakSelf parseResponse:(NSDictionary*)dict];
                                      }
                                      
+                                     
+                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                         if (errorMsg){
+                                             [weakSelf displayErrorWithReason:errorMsg];
+                                         }
+                                         weakSelf.fetchingForecast = NO;
+                                         [weakSelf.spinner stopAnimating];
+                                     });
                                  }] resume];
 }
 
@@ -228,7 +247,8 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
     NSLog(@"%s %@",__PRETTY_FUNCTION__, error);
-    //present failure alert
+    [self displayErrorWithReason:@"A GPS error occurred"];
+    [_spinner stopAnimating];
 }
 
 #pragma mark - UICollectionView Data Source
@@ -240,7 +260,6 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     NGDaysCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellReuseIdentifier forIndexPath:indexPath];
-    cell.contentView.backgroundColor = [UIColor greenColor];
     
     [cell setDailyForecast:[_resultsController objectAtIndexPath:indexPath]];
     

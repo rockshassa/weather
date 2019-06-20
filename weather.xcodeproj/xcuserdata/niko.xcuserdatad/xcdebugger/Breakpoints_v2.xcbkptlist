@@ -31,11 +31,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "weather/View Controllers/NGDaysCollectionViewController.m"
-            timestampString = "582671047.8351589"
+            timestampString = "582735608.539533"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
+            startingLineNumber = "170"
+            endingLineNumber = "170"
             landmarkName = "-fetchForecastForLocation:"
             landmarkType = "7">
          </BreakpointContent>
