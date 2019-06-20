@@ -9,6 +9,7 @@
 #import "NGDaysCollectionViewController.h"
 #import "NGDaysCollectionViewCell.h"
 #import "NGDailyForecast+CoreDataProperties.h"
+#import "NGForecastDetailViewController.h"
 
 @import CoreLocation;
 @import CoreData;
@@ -57,6 +58,7 @@ static NSString * const cellReuseIdentifier = @"com.weather.NGDaysCollectionView
     _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     _spinner.translatesAutoresizingMaskIntoConstraints = NO;
     _spinner.hidden = YES;
+    _spinner.backgroundColor = [UIColor lightGrayColor];
     [self.view addSubview:_spinner];
     
     [_spinner.centerXAnchor constraintEqualToAnchor:self.collectionView.centerXAnchor].active = YES;
@@ -64,6 +66,7 @@ static NSString * const cellReuseIdentifier = @"com.weather.NGDaysCollectionView
     
     _writeContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     _writeContext.parentContext = self.container.viewContext;
+    _writeContext.automaticallyMergesChangesFromParent = YES;
     
     _locationManager = [CLLocationManager new];
     _locationManager.delegate = self;
@@ -88,11 +91,15 @@ static NSString * const cellReuseIdentifier = @"com.weather.NGDaysCollectionView
     [self requestLocationIfNeeded];
 }
 
-#pragma - NSFetchedResultsController Delegate
+#pragma mark - NSFetchedResultsController Delegate
 
 -(void)controllerDidChangeContent:(NSFetchedResultsController *)controller{
     NSLog(@"%s",__PRETTY_FUNCTION__);
+    NSAssert([NSThread mainThread], @"");
     [self.collectionView reloadData];
+    if (controller.fetchedObjects.count){
+        [_spinner stopAnimating];
+    }
 }
 
 #pragma mark - Error Handling
@@ -160,23 +167,25 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
     [[[NSURLSession sharedSession] dataTaskWithURL:url
                                  completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                                      
-                                     NSError *parseError;
-                                     id dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
-                                     
                                      //TODO: care about the HTTP status code
                                      
                                      NSString *errorMsg;
                                      
-                                     if (error ||
-                                         dict == [NSNull null] ||
-                                         ![dict isKindOfClass:[NSDictionary class]]){
+                                     if (!data ||
+                                         error){
                                          errorMsg = @"A network error occurred";
-                                     } else if (parseError) {
-                                         errorMsg = @"A parsing error occurred";
                                      } else {
-                                         [weakSelf parseResponse:(NSDictionary*)dict];
+                                         NSError *parseError;
+                                         id dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
+                                         if (parseError ||
+                                             dict == [NSNull null] ||
+                                             ![dict isKindOfClass:[NSDictionary class]]) {
+                                             errorMsg = @"There is a problem with the response";
+                                         } else {
+                                             //should occur on BG thread
+                                            [weakSelf handleResponse:(NSDictionary*)dict];
+                                         }
                                      }
-                                     
                                      
                                      dispatch_async(dispatch_get_main_queue(), ^{
                                          if (errorMsg){
@@ -188,46 +197,104 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
                                  }] resume];
 }
 
--(void)parseResponse:(NSDictionary*)response{
+-(void)handleResponse:(NSDictionary*)response{
     
     //NOTE: because these keys do not get re-used elsewhere in the code, i am using literals
-    //production code would probably define string constants for reuse
-    
-    //NOTE: normally you'd want to update an existing record (if it exists), rather than blindly inserting and getting duplicates
-    //for the sake of this example, nuking the DB to remove duplicates
-    [self.writeContext reset];
+    //production code would define string constants for reuse
     
     NSDictionary *daily = response[@"daily"]; //this should be null- and type- checked
     NSArray *data = daily[@"data"]; //and this
     __weak typeof(self) weakSelf = self;
     
     [self.writeContext performBlock:^{
+    
+        //NOTE: normally you'd want to update an existing record (if it exists), rather than blindly inserting and getting duplicates etc
+        //for the sake of this example, nuking the DB to remove duplicates
+        //the delete is a blocking operation on the writeContext's private queue,
+        //not something i'd do for real but necessary in this particular scenario
+        [weakSelf nukeViewContext];
         
         for (NSDictionary *d in data){
-            NGDailyForecast *forecast = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([NGDailyForecast class]) inManagedObjectContext:weakSelf.writeContext];
-            
-            //These should also be type- and null-checked.
-            //In Swift this would be done with Codable and we'd get that behavior for free
-            
-            NSNumber *time = d[@"time"];
-            forecast.date = [[NSDate alloc] initWithTimeIntervalSince1970:time.doubleValue];
-            
-            NSNumber *low = d[@"apparentTemperatureLow"];
-            forecast.apparentTemperatureLow = low.floatValue;
-            
-            NSNumber *high = d[@"apparentTemperatureHigh"];
-            forecast.apparentTemperatureHigh = high.floatValue;
-            
-            forecast.iconName = d[@"icon"];
-            forecast.summary = d[@"summary"];
-            
-            NSLog(@"%@",forecast);
+            //batch insert would be more performant
+            [self insertForecastWithJSON:d];
         }
         
-        NSError *saveError;
-        [weakSelf.writeContext save:&saveError];
-        NSLog(@"saved ctx with error: %@", saveError);
+        NSError *writeError;
+        [weakSelf.writeContext save:&writeError];
+        
+        if (writeError) {
+            NSLog(@"saved write ctx with error: %@", writeError);
+        } else {
+            
+            //OK to do this because we know its a main-thread context.
+            //but probably not the prettiest way to get this to happen
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSError *viewSaveError;
+                [weakSelf.container.viewContext save:&viewSaveError];
+                NSLog(@"saved viewctx with error: %@",viewSaveError);
+            });
+        }
     }];
+}
+
+-(void)nukeViewContext{
+    [self.container.viewContext performBlockAndWait:^{
+        
+        NSError *fetchError;
+        NSArray<NGDailyForecast*>* results = [self.container.viewContext executeFetchRequest:[NGDailyForecast fetchRequest]
+                                                                                           error:&fetchError];
+        for (NGDailyForecast *r in results){
+            //batch delete is faster but changes don't propogate to the UI
+            [self.container.viewContext deleteObject:r];
+        }
+        
+        //delete will be auto-propagated to the write context
+        NSError *saveError;
+        [self.container.viewContext save:&saveError];
+        
+        if (saveError){
+            NSLog(@"delete error %@", saveError);
+        }
+    }];
+}
+
+-(void)insertForecastWithJSON:(NSDictionary*)json{
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:NSStringFromClass([NGDailyForecast class])
+                                              inManagedObjectContext:self.writeContext];
+    NGDailyForecast *forecast = [[NGDailyForecast alloc] initWithEntity:entity
+                                         insertIntoManagedObjectContext:self.writeContext];
+    NSError *insertError;
+    
+    //need this as the object ID is past to the detail view controller
+    [self.writeContext obtainPermanentIDsForObjects:@[forecast] error:&insertError];
+    
+    if (insertError) {
+        NSLog(@"couldn't get permanent object ID. %@", insertError);
+    }
+    
+    [self updateForecast:forecast fromJSON:json];
+}
+
+//use the protocol instead of a concrete type so that the parsing logic can be tested
+-(id<NGDailyForecastProtocol>)updateForecast:(id<NGDailyForecastProtocol>)forecast fromJSON:(NSDictionary*)json{
+
+    //These should also be type- and null-checked.
+    //In Swift this would be done with Codable and we'd get that behavior for free
+    
+    NSNumber *time = json[@"time"];
+    forecast.date = [[NSDate alloc] initWithTimeIntervalSince1970:time.doubleValue];
+    
+    NSNumber *low = json[@"apparentTemperatureLow"];
+    forecast.apparentTemperatureLow = low.floatValue;
+    
+    NSNumber *high = json[@"apparentTemperatureHigh"];
+    forecast.apparentTemperatureHigh = high.floatValue;
+    
+    forecast.iconName = json[@"icon"];
+    forecast.summary = json[@"summary"];
+    
+    return forecast;
 }
 
 #pragma mark - CLLocationManager Delegate
@@ -270,6 +337,10 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
+    NGDailyForecast *forecast = _resultsController.fetchedObjects[indexPath.row];
+    NGForecastDetailViewController *vc = [[NGForecastDetailViewController alloc] initWithObjectID:forecast.objectID
+                                                                                        inContext:self.container.viewContext];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{

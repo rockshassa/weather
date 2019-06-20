@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "NGDaysCollectionViewController.h"
 
-@interface AppDelegate ()
+@interface AppDelegate () //This class should also be Namespaced
 
 @end
 
@@ -53,6 +53,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
+    NSLog(@"%s",__PRETTY_FUNCTION__);
     [self saveContext];
 }
 

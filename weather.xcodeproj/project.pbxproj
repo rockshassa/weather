@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23B9621D22BBD7BB0084B348 /* NGForecastDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B9621C22BBD7BB0084B348 /* NGForecastDetailViewController.m */; };
 		23B994B922BA7EBC005D82E8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994B822BA7EBC005D82E8 /* AppDelegate.m */; };
 		23B994BC22BA7EBC005D82E8 /* NGDaysCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994BB22BA7EBC005D82E8 /* NGDaysCollectionViewController.m */; };
 		23B994C422BA7EBE005D82E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23B994C322BA7EBE005D82E8 /* Assets.xcassets */; };
@@ -30,6 +31,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		23B9621B22BBD7BB0084B348 /* NGForecastDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NGForecastDetailViewController.h; sourceTree = "<group>"; };
+		23B9621C22BBD7BB0084B348 /* NGForecastDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NGForecastDetailViewController.m; sourceTree = "<group>"; };
 		23B994B422BA7EBC005D82E8 /* weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23B994B722BA7EBC005D82E8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		23B994B822BA7EBC005D82E8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -49,6 +52,7 @@
 		23B994E722BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NGDailyForecast+CoreDataProperties.m"; sourceTree = "<group>"; };
 		23B994F822BADA22005D82E8 /* NGDaysCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NGDaysCollectionViewCell.h; sourceTree = "<group>"; };
 		23B994F922BADA22005D82E8 /* NGDaysCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NGDaysCollectionViewCell.m; sourceTree = "<group>"; };
+		23D02E9F22BBF63E00672F94 /* NGDailyForecastProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NGDailyForecastProtocol.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +131,8 @@
 			children = (
 				23B994BA22BA7EBC005D82E8 /* NGDaysCollectionViewController.h */,
 				23B994BB22BA7EBC005D82E8 /* NGDaysCollectionViewController.m */,
+				23B9621B22BBD7BB0084B348 /* NGForecastDetailViewController.h */,
+				23B9621C22BBD7BB0084B348 /* NGForecastDetailViewController.m */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -138,6 +144,7 @@
 				23B994E622BAA7DE005D82E8 /* NGDailyForecast+CoreDataClass.m */,
 				23B994E422BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.h */,
 				23B994E722BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.m */,
+				23D02E9F22BBF63E00672F94 /* NGDailyForecastProtocol.h */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -243,6 +250,7 @@
 			files = (
 				23B994E922BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.m in Sources */,
 				23B994BC22BA7EBC005D82E8 /* NGDaysCollectionViewController.m in Sources */,
+				23B9621D22BBD7BB0084B348 /* NGForecastDetailViewController.m in Sources */,
 				23B994CA22BA7EBE005D82E8 /* main.m in Sources */,
 				23B994B922BA7EBC005D82E8 /* AppDelegate.m in Sources */,
 				23B994EF22BAC060005D82E8 /* weather.xcdatamodeld in Sources */,
