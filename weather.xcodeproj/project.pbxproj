@@ -18,6 +18,7 @@
 		23B994E922BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994E722BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.m */; };
 		23B994EF22BAC060005D82E8 /* weather.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 23B994C022BA7EBC005D82E8 /* weather.xcdatamodeld */; };
 		23B994FA22BADA22005D82E8 /* NGDaysCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994F922BADA22005D82E8 /* NGDaysCollectionViewCell.m */; };
+		23D02EA222BC107B00672F94 /* NGPushAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D02EA122BC107B00672F94 /* NGPushAnimator.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,8 @@
 		23B994F822BADA22005D82E8 /* NGDaysCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NGDaysCollectionViewCell.h; sourceTree = "<group>"; };
 		23B994F922BADA22005D82E8 /* NGDaysCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NGDaysCollectionViewCell.m; sourceTree = "<group>"; };
 		23D02E9F22BBF63E00672F94 /* NGDailyForecastProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NGDailyForecastProtocol.h; sourceTree = "<group>"; };
+		23D02EA022BC107B00672F94 /* NGPushAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NGPushAnimator.h; sourceTree = "<group>"; };
+		23D02EA122BC107B00672F94 /* NGPushAnimator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NGPushAnimator.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +97,7 @@
 		23B994B622BA7EBC005D82E8 /* weather */ = {
 			isa = PBXGroup;
 			children = (
+				23D02EA622BC304E00672F94 /* Misc */,
 				23B994E322BAA7C0005D82E8 /* Model */,
 				23B994E222BA8228005D82E8 /* View Controllers */,
 				23B994E122BA8218005D82E8 /* Views */,
@@ -147,6 +151,15 @@
 				23D02E9F22BBF63E00672F94 /* NGDailyForecastProtocol.h */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		23D02EA622BC304E00672F94 /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				23D02EA022BC107B00672F94 /* NGPushAnimator.h */,
+				23D02EA122BC107B00672F94 /* NGPushAnimator.m */,
+			);
+			path = Misc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -249,6 +262,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				23B994E922BAA7DE005D82E8 /* NGDailyForecast+CoreDataProperties.m in Sources */,
+				23D02EA222BC107B00672F94 /* NGPushAnimator.m in Sources */,
 				23B994BC22BA7EBC005D82E8 /* NGDaysCollectionViewController.m in Sources */,
 				23B9621D22BBD7BB0084B348 /* NGForecastDetailViewController.m in Sources */,
 				23B994CA22BA7EBE005D82E8 /* main.m in Sources */,

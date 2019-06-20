@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) NSString *weekday;
 
+-(void)updateFromJSON:(NSDictionary*)json;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -10,11 +10,12 @@
 #import "NGDaysCollectionViewCell.h"
 #import "NGDailyForecast+CoreDataProperties.h"
 #import "NGForecastDetailViewController.h"
+#import "NGPushAnimator.h"
 
 @import CoreLocation;
 @import CoreData;
 
-@interface NGDaysCollectionViewController () <CLLocationManagerDelegate, NSFetchedResultsControllerDelegate, UICollectionViewDelegateFlowLayout>
+@interface NGDaysCollectionViewController () <CLLocationManagerDelegate, NSFetchedResultsControllerDelegate, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic) UIActivityIndicatorView *spinner;
 
@@ -52,17 +53,16 @@ static NSString * const cellReuseIdentifier = @"com.weather.NGDaysCollectionView
     
     self.title = @"Weather near me";
     self.collectionView.backgroundColor = [UIColor grayColor];
+    self.navigationController.delegate = self;
+    
+    //the custom push animation causes this pop gesture to be disabled. this re-enables it
+    //ideally I'd check for protocol conformance before casting self as UIGestureRecognizerDelegate
+    self.navigationController.interactivePopGestureRecognizer.delegate = (id<UIGestureRecognizerDelegate>)self;
     
     [self.collectionView registerClass:[NGDaysCollectionViewCell class] forCellWithReuseIdentifier:cellReuseIdentifier];
     
-    _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    _spinner.translatesAutoresizingMaskIntoConstraints = NO;
-    _spinner.hidden = YES;
-    _spinner.backgroundColor = [UIColor lightGrayColor];
-    [self.view addSubview:_spinner];
-    
-    [_spinner.centerXAnchor constraintEqualToAnchor:self.collectionView.centerXAnchor].active = YES;
-    [_spinner.centerYAnchor constraintEqualToAnchor:self.collectionView.centerYAnchor].active = YES;
+    _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_spinner];
     
     _writeContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     _writeContext.parentContext = self.container.viewContext;
@@ -90,6 +90,19 @@ static NSString * const cellReuseIdentifier = @"com.weather.NGDaysCollectionView
     [super viewDidAppear:animated];
     [self requestLocationIfNeeded];
 }
+
+#pragma mark - UINavigationControllerDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC{
+    
+    switch (operation) {
+        case UINavigationControllerOperationPush:
+            return [NGPushAnimator new];
+        default:
+            return nil;
+    }
+}
+
 
 #pragma mark - NSFetchedResultsController Delegate
 
@@ -144,11 +157,12 @@ static NSString * const cellReuseIdentifier = @"com.weather.NGDaysCollectionView
             [_spinner startAnimating];
             break;
         default:
+            [self displayErrorWithReason:@"Please allow location access in settings"];
             break;
     }
 }
 
-#pragma mark - Network Request
+#pragma mark - Network Request Handling
 
 static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
 
@@ -199,7 +213,7 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
 
 -(void)handleResponse:(NSDictionary*)response{
     
-    //NOTE: because these keys do not get re-used elsewhere in the code, i am using literals
+    //NOTE: because these keys do not get re-used elsewhere in the code, i am using literals here
     //production code would define string constants for reuse
     
     NSDictionary *daily = response[@"daily"]; //this should be null- and type- checked
@@ -215,8 +229,7 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
         [weakSelf nukeViewContext];
         
         for (NSDictionary *d in data){
-            //batch insert would be more performant
-            [self insertForecastWithJSON:d];
+            [self insertForecastWithJSON:d]; //batch insert would be more performant
         }
         
         NSError *writeError;
@@ -231,18 +244,38 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSError *viewSaveError;
                 [weakSelf.container.viewContext save:&viewSaveError];
-                NSLog(@"saved viewctx with error: %@",viewSaveError);
+                NSLog(@"saved view ctx with error: %@",viewSaveError);
             });
         }
     }];
 }
 
+-(void)insertForecastWithJSON:(NSDictionary*)json{
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:NSStringFromClass([NGDailyForecast class])
+                                              inManagedObjectContext:self.writeContext];
+    NGDailyForecast *forecast = [[NGDailyForecast alloc] initWithEntity:entity
+                                         insertIntoManagedObjectContext:self.writeContext];
+    NSError *insertError;
+    
+    //need this as the object ID is passed to the detail view controller
+    [self.writeContext obtainPermanentIDsForObjects:@[forecast] error:&insertError];
+    
+    if (insertError) {
+        NSLog(@"couldn't get permanent object ID. %@", insertError);
+    }
+    
+    [forecast updateFromJSON:json];
+}
+
 -(void)nukeViewContext{
+    
+    //generally prefer not to perform any operations on the ViewContext, but it is the parent in this example
     [self.container.viewContext performBlockAndWait:^{
         
         NSError *fetchError;
         NSArray<NGDailyForecast*>* results = [self.container.viewContext executeFetchRequest:[NGDailyForecast fetchRequest]
-                                                                                           error:&fetchError];
+                                                                                       error:&fetchError];
         for (NGDailyForecast *r in results){
             //batch delete is faster but changes don't propogate to the UI
             [self.container.viewContext deleteObject:r];
@@ -256,45 +289,6 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
             NSLog(@"delete error %@", saveError);
         }
     }];
-}
-
--(void)insertForecastWithJSON:(NSDictionary*)json{
-    
-    NSEntityDescription *entity = [NSEntityDescription entityForName:NSStringFromClass([NGDailyForecast class])
-                                              inManagedObjectContext:self.writeContext];
-    NGDailyForecast *forecast = [[NGDailyForecast alloc] initWithEntity:entity
-                                         insertIntoManagedObjectContext:self.writeContext];
-    NSError *insertError;
-    
-    //need this as the object ID is past to the detail view controller
-    [self.writeContext obtainPermanentIDsForObjects:@[forecast] error:&insertError];
-    
-    if (insertError) {
-        NSLog(@"couldn't get permanent object ID. %@", insertError);
-    }
-    
-    [self updateForecast:forecast fromJSON:json];
-}
-
-//use the protocol instead of a concrete type so that the parsing logic can be tested
--(id<NGDailyForecastProtocol>)updateForecast:(id<NGDailyForecastProtocol>)forecast fromJSON:(NSDictionary*)json{
-
-    //These should also be type- and null-checked.
-    //In Swift this would be done with Codable and we'd get that behavior for free
-    
-    NSNumber *time = json[@"time"];
-    forecast.date = [[NSDate alloc] initWithTimeIntervalSince1970:time.doubleValue];
-    
-    NSNumber *low = json[@"apparentTemperatureLow"];
-    forecast.apparentTemperatureLow = low.floatValue;
-    
-    NSNumber *high = json[@"apparentTemperatureHigh"];
-    forecast.apparentTemperatureHigh = high.floatValue;
-    
-    forecast.iconName = json[@"icon"];
-    forecast.summary = json[@"summary"];
-    
-    return forecast;
 }
 
 #pragma mark - CLLocationManager Delegate
@@ -340,11 +334,16 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
     NGDailyForecast *forecast = _resultsController.fetchedObjects[indexPath.row];
     NGForecastDetailViewController *vc = [[NGForecastDetailViewController alloc] initWithObjectID:forecast.objectID
                                                                                         inContext:self.container.viewContext];
+    
+    //setup for animation
+    NGDaysCollectionViewCell *cell = (NGDaysCollectionViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
+    cell.iconView.tag = NG_ANIMATION_SOURCE_TAG;
+    
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return CGSizeMake(CGRectGetWidth(collectionView.frame), 100);
+    return CGSizeMake(CGRectGetWidth(collectionView.frame), 80);
 }
 
 @end

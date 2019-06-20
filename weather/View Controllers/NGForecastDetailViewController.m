@@ -8,6 +8,7 @@
 
 #import "NGForecastDetailViewController.h"
 #import "NGDailyForecast+CoreDataProperties.h"
+#import "NGPushAnimator.h"
 
 @import CoreData;
 
@@ -43,23 +44,29 @@
     
     _imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:_forecast.iconName]];
     _imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    _imageView.tag = NG_ANIMATION_DESTINATION_TAG;
     [self.view addSubview:_imageView];
     
     _textLabel  = [UILabel new];
     _textLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _textLabel.text = [NSString stringWithFormat:@"%@\n%@\nHigh: %f\nLow: %f",_forecast.weekday, _forecast.summary, _forecast.apparentTemperatureHigh, _forecast.apparentTemperatureLow];
     _textLabel.numberOfLines = 0;
+    [_textLabel sizeToFit];
     [self.view addSubview:_textLabel];
-    
-    [_imageView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-    [_imageView.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant:20].active = YES;
-    [_imageView.heightAnchor constraintEqualToConstant:_imageView.image.size.height].active = YES;
-    
-    [_textLabel.topAnchor constraintEqualToSystemSpacingBelowAnchor:_imageView.bottomAnchor multiplier:1].active = YES;
-    [_textLabel.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.view.leadingAnchor multiplier:1].active = YES;
-    [_textLabel.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
     
 }
 
+-(void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    
+    /*
+     it seems that Autolayout does not update the constraints of this VC prior to
+     - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext being called
+     this messed with the animation i wanted to do so I am placing these views by setting frames
+     */
+    
+    _imageView.center = CGPointMake(CGRectGetMidX(self.view.bounds), self.view.safeAreaInsets.top+60); //magic number 60 is bad
+    _textLabel.center = self.view.center;
+}
 
 @end

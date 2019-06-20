@@ -35,4 +35,23 @@
     }
 }
 
+//use the protocol instead of a concrete type so that the parsing logic can be tested w/ a mock object not attached to an object context
+-(void)updateFromJSON:(NSDictionary*)json{
+    
+    //These should also be type- and null-checked.
+    //In Swift this would be done with Codable and we'd get that behavior for free
+    
+    NSNumber *time = json[@"time"];
+    self.date = [[NSDate alloc] initWithTimeIntervalSince1970:time.doubleValue];
+    
+    NSNumber *low = json[@"apparentTemperatureLow"];
+    self.apparentTemperatureLow = low.floatValue;
+    
+    NSNumber *high = json[@"apparentTemperatureHigh"];
+    self.apparentTemperatureHigh = high.floatValue;
+    
+    self.iconName = json[@"icon"];
+    self.summary = json[@"summary"];
+}
+
 @end

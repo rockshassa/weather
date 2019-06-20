@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NGDaysCollectionViewCell : UICollectionViewCell
 
+@property (readonly) UIImageView *iconView;
+
 -(void)setDailyForecast:(NGDailyForecast*)forecast;
 
 @end

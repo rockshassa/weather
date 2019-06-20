@@ -46,7 +46,6 @@
         [_titleLabel.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.iconView.trailingAnchor multiplier:1].active = YES;
         [_titleLabel.topAnchor constraintEqualToSystemSpacingBelowAnchor:self.contentView.topAnchor multiplier:1].active = YES;
         
-        
     }
     return self;
 }
@@ -55,7 +54,7 @@
     [super layoutSubviews];
     self.contentView.layer.cornerRadius = 15;
     self.contentView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.contentView.layer.borderWidth = 2;
+    self.contentView.layer.borderWidth = 1;
 }
 
 -(void)setDailyForecast:(NGDailyForecast*)forecast{
