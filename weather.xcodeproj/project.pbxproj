@@ -19,6 +19,7 @@
 		23B994EF22BAC060005D82E8 /* weather.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 23B994C022BA7EBC005D82E8 /* weather.xcdatamodeld */; };
 		23B994FA22BADA22005D82E8 /* NGDaysCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B994F922BADA22005D82E8 /* NGDaysCollectionViewCell.m */; };
 		23D02EA222BC107B00672F94 /* NGPushAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D02EA122BC107B00672F94 /* NGPushAnimator.m */; };
+		23D02EA922BD20B500672F94 /* NGMockForecast.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D02EA822BD20B500672F94 /* NGMockForecast.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,8 @@
 		23D02E9F22BBF63E00672F94 /* NGDailyForecastProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NGDailyForecastProtocol.h; sourceTree = "<group>"; };
 		23D02EA022BC107B00672F94 /* NGPushAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NGPushAnimator.h; sourceTree = "<group>"; };
 		23D02EA122BC107B00672F94 /* NGPushAnimator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NGPushAnimator.m; sourceTree = "<group>"; };
+		23D02EA722BD20B500672F94 /* NGMockForecast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NGMockForecast.h; sourceTree = "<group>"; };
+		23D02EA822BD20B500672F94 /* NGMockForecast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NGMockForecast.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +120,8 @@
 			children = (
 				23B994D322BA7EBE005D82E8 /* weatherTests.m */,
 				23B994D522BA7EBE005D82E8 /* Info.plist */,
+				23D02EA722BD20B500672F94 /* NGMockForecast.h */,
+				23D02EA822BD20B500672F94 /* NGMockForecast.m */,
 			);
 			path = weatherTests;
 			sourceTree = "<group>";
@@ -278,6 +283,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				23B994D422BA7EBE005D82E8 /* weatherTests.m in Sources */,
+				23D02EA922BD20B500672F94 /* NGMockForecast.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

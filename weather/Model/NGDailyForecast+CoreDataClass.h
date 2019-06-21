@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "NGDailyForecastProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) NSString *weekday;
 
--(void)updateFromJSON:(NSDictionary*)json;
++(id<NGDailyForecastProtocol>)updateForecast:(id<NGDailyForecastProtocol>)forecast withJSON:(NSDictionary*)json;
 
 @end
 

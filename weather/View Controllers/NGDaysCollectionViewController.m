@@ -265,7 +265,7 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
         NSLog(@"couldn't get permanent object ID. %@", insertError);
     }
     
-    [forecast updateFromJSON:json];
+    [NGDailyForecast updateForecast:forecast withJSON:json];
 }
 
 -(void)nukeViewContext{

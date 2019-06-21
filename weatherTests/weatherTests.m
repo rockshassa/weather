@@ -7,6 +7,9 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "NGDailyForecastProtocol.h"
+#import "NGMockForecast.h"
+#import "NGDailyForecast+CoreDataClass.h"
 
 @interface weatherTests : XCTestCase
 
@@ -22,16 +25,31 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-}
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+-(void)testParsing{
+    
+    const CGFloat knownHigh = 74.25;
+    const CGFloat knownLow = 69.75;
+    NSString *knownIcon = @"rain";
+    NSString *knownSummary = @"Possible light rain in the evening and overnight.";
+    const CGFloat knownTime = 1560916800;
+    
+    NSString *sampleJSON = [NSString stringWithFormat:@"{ \"apparentTemperatureHigh\" : %f,"
+                            "\"apparentTemperatureLow\" : %f,"
+                            "\"icon\" : \"%@\","
+                            "\"summary\" : \"%@\","
+                            "\"time\" : %f }", knownHigh, knownLow, knownIcon, knownSummary, knownTime];
+    
+    NSData *data = [sampleJSON dataUsingEncoding:NSUTF8StringEncoding];
+    id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    NGMockForecast *mock = [NGMockForecast new];
+    [NGDailyForecast updateForecast:mock withJSON:json];
+    
+    XCTAssert(mock.apparentTemperatureLow == knownLow);
+    XCTAssert(mock.apparentTemperatureHigh == knownHigh);
+    XCTAssert([mock.iconName isEqualToString:knownIcon]);
+    XCTAssert([mock.summary isEqualToString:knownSummary]);
+    XCTAssert(mock.date.timeIntervalSince1970 == knownTime);
+    
 }
 
 @end
