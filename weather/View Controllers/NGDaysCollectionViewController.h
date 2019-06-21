@@ -13,7 +13,5 @@
 
 -(instancetype)initWithPersistentContainer:(NSPersistentContainer*)container;
 
-+(UICollectionViewFlowLayout*)defaultLayout;
-
 @end
 

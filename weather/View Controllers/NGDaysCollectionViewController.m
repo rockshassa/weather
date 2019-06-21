@@ -59,7 +59,8 @@ static NSString * const cellReuseIdentifier = @"com.weather.NGDaysCollectionView
     //ideally I'd check for protocol conformance before casting self as UIGestureRecognizerDelegate
     self.navigationController.interactivePopGestureRecognizer.delegate = (id<UIGestureRecognizerDelegate>)self;
     
-    [self.collectionView registerClass:[NGDaysCollectionViewCell class] forCellWithReuseIdentifier:cellReuseIdentifier];
+    [self.collectionView registerClass:[NGDaysCollectionViewCell class]
+            forCellWithReuseIdentifier:cellReuseIdentifier];
     
     _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_spinner];
@@ -210,6 +211,8 @@ static NSString * const apiKey = @"ee36d69e7b17d4f49a545b25ae35899e";
                                      });
                                  }] resume];
 }
+
+#pragma mark - Coredata Stuff
 
 -(void)handleResponse:(NSDictionary*)response{
     

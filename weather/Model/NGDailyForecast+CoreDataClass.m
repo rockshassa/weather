@@ -41,6 +41,7 @@
     
     //These should also be type- and null-checked.
     //In Swift this would be done with Codable and we'd get that behavior for free
+    //should define string constants instead of using literals in a production app
     
     NSNumber *time = json[@"time"];
     forecast.date = [[NSDate alloc] initWithTimeIntervalSince1970:time.doubleValue];
